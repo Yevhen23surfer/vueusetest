@@ -3,7 +3,7 @@ import {ref} from 'vue';
 import { useClipboard } from '@vueuse/core';
 
 const textToCopy = ref('Hello');
-const { copy, copied, text } = useClipboard({source: textToCopy, copiedDuring: 3000, isSupported})
+const { copy, copied, text } = useClipboard({source: textToCopy, copiedDuring: 3000,})
 
 </script>
 
