@@ -1,39 +1,31 @@
 <script setup>
-import { useDark, useToggle, useColorMode } from '@vueuse/core'
-const isDark = useDark(); // true or false
-const colorMode = useColorMode({
-    modes: {
-        dim: 'dim',
-        cafe: 'cafe',
-    },
-    attribute: 'theme',
-}); // light or dark
-const toggleDark = useToggle(isDark);
+import {ref} from 'vue';
+import { onKeyStroke } from '@vueuse/core';
+
+onKeyStroke('ArrowDown', (e) => {
+    e.preventDefault();
+    position.value.y += 5;
+});
+onKeyStroke('ArrowUp', (e) => {
+    e.preventDefault();
+    position.value.y -= 5;
+})
+
+const position = ref({ x: 0, y: 0 });
 </script>
 
 <template>
-    {{ colorMode }}
-    <button @click="colorMode = 'dark'">Dark Mode</button>
-    <button @click="colorMode = 'light'">Light Mode</button>
-    <button @click="colorMode = 'cafe'">Cafe Mode</button>
-    <button @click="colorMode = 'dim'" >Dim Mode</button>
+    <div class="ball"></div>
 </template>
 
 <style>
-[theme="dark"]{
-    background: black;
-    color: white;
-}
-[theme="light"].dark{
-    background: black;
-    color: white;
-}
-[theme='dim']{
-    background: rgb(0, 212, 71);
-    color: rgb(0, 0, 0);
-}
-[theme='cafe']{
-    background: burlywood;
-    color: rgb(65, 26, 26);
+.ball {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+    position: absolute;
+    top: v-bind(position.y + 'px');
+    left: v-bind(position.x + 'px');
 }
 </style>
