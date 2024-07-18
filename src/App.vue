@@ -1,31 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useTimeoutFn } from '@vueuse/core';
-const showAlert = ref(true);
-const { start, stop, isPending } = useTimeoutFn(()=>{
-  showAlert.value = false;
-}, 3000)
+import { ref, computed } from 'vue';
+import { useTimestamp, useInterval } from '@vueuse/core';
+const timestamp = useTimestamp();
+const counter = useInterval(1000);
+const start = Date.now();
+
+const secondPassed = computed(() => {
+  return Math.floor((timestamp.value - start) / 1000);
+});
+
+const hangTheBrowser = () => {
+  for (let i=0; i < 1_000_000; i++) {
+    console.log(i);
+  }
+};
 </script>
 
 <template>
-<transition appear>
-<div v-if="showAlert" class="alert" @mouseenter="stop" @mouseout="start">
-    Your post has been saved
-    <button @click="stop">x</button>
-</div>
-</transition>
+  <div>Interval: {{ counter }}</div>
+  <div>Timestamp: {{ secondPassed }}</div>
+<button @click="hangTheBrowser">Hang The Browser</button>
 
 </template>
-
-<style>
-.v-enter-active,
-.v-leave-active {
-  transition: all 0.2s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-</style>
