@@ -1,24 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useTimestamp, useInterval } from '@vueuse/core';
-const timestamp = useTimestamp();
-const counter = useInterval(1000);
-const start = Date.now();
+import { useNow, useDateFormat } from '@vueuse/core';
 
-const secondPassed = computed(() => {
-  return Math.floor((timestamp.value - start) / 1000);
-});
+const now = useDateFormat(useNow(), "HH:mm:ss");
 
-const hangTheBrowser = () => {
-  for (let i=0; i < 1_000_000; i++) {
-    console.log(i);
-  }
-};
 </script>
 
 <template>
-  <div>Interval: {{ counter }}</div>
-  <div>Timestamp: {{ secondPassed }}</div>
-<button @click="hangTheBrowser">Hang The Browser</button>
+{{ now }}
 
 </template>
