@@ -1,22 +1,17 @@
-
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useFetch } from '@vueuse/core';
-
-const id = ref(1);
-const url = computed(() => {
-    return `https://jsonplaceholder.typicode.com/todos/${id.value}` 
-});
-const { isFetching, data, error } = useFetch(url, {
-    refetch: true
-});
+import { ref } from 'vue';
+import { useBase64 } from '@vueuse/core';
+const image = ref('');
+const { base64 } = useBase64(image);
 </script>
 
 <template>
-<div v-if="error" style="color: red">Error {{ error }}</div>
-<div v-else-if="isFetching" style="color: blue">loading...</div>
-<pre v-else>{{ data }}</pre>
-<input type="number" v-model="id">
+  <input
+    type="file"
+    accept="image/png, image/jpeg"
+    @change="image = $event.target.files[0]"
+  />
+  <br />
+  <br />
+  <img v-if="image" :src="base64" width="300" />
 </template>
-
-// good for pagination and serch etc
