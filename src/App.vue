@@ -2,14 +2,17 @@
 import {ref} from 'vue';
 import { onKeyStroke } from '@vueuse/core';
 
-onKeyStroke('ArrowDown', (e) => {
+const controls = {
+    ArrowDown: () => (position.value.y += 5),
+    ArrowUp: () => (position.value.y -= 5),
+    ArrowRight: () => (position.value.x += 5),
+    ArrowLeft: () => (position.value.x -= 5),
+};
+
+onKeyStroke(Object.keys(controls), (e) =>{
     e.preventDefault();
-    position.value.y += 5;
+    controls[e.key]();
 });
-onKeyStroke('ArrowUp', (e) => {
-    e.preventDefault();
-    position.value.y -= 5;
-})
 
 const position = ref({ x: 0, y: 0 });
 </script>
