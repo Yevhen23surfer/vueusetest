@@ -1,17 +1,17 @@
+// VueUse Utilities: computedAsync and logic utils
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useBase64 } from '@vueuse/core';
-const image = ref('');
-const { base64 } = useBase64(image);
+import { ref, computed } from 'vue';
+import { computedAsync } from '@vueuse/core';
+const id = ref(1);
+const url = computed(
+  () => `https://jsonplaceholder.typicode.com/posts/${id.value}`
+);
+const post = computedAsync(
+  () => fetch(url.value).then((res) => res.json())
+);
 </script>
 
 <template>
-  <input
-    type="file"
-    accept="image/png, image/jpeg"
-    @change="image = $event.target.files[0]"
-  />
-  <br />
-  <br />
-  <img v-if="image" :src="base64" width="300" />
+  <input type="number" v-model="id">
+{{ post }}
 </template>
