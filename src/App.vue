@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
-import { useDisplayMedia } from '@vueuse/core';
-const video = ref();
-const { stream, enabled } = useDisplayMedia();
-watchEffect(() => {
-  if (video.value) 
-    video.value.srcObject = stream.value;
-});
+import { useIntervalFn } from '@vueuse/core';
+const { pause, resume, isActive} = useIntervalFn(()=> console.log('Hello world'), 100)
 </script>
 
 <template>
-  <button @click="enabled = !enabled">Start Screen Share</button>
-  <video ref="video" muted autoplay controls width="800"></video>
+
+<button @click="isActive ? pause() : resume()">{{ isActive ? 'Pause' : 'Resume' }}</button>
 </template>
