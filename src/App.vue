@@ -1,9 +1,31 @@
 <script setup lang="ts">
-import { useIntervalFn } from '@vueuse/core';
-const { pause, resume, isActive} = useIntervalFn(()=> console.log('Hello world'), 100)
+import { ref } from 'vue';
+import { useTimeout } from '@vueuse/core';
+
+const {ready, start, stop, isPending } = useTimeout(3000, { controls: true })
 </script>
 
 <template>
+{{ ready }}
+<transition appear>
+<div v-if="isPending" class="alert">
+    Your post has been saved
+    <button @click="stop">x</button>
+</div>
+</transition>
+<button @click="start">start timeout</button>
 
-<button @click="isActive ? pause() : resume()">{{ isActive ? 'Pause' : 'Resume' }}</button>
 </template>
+
+<style>
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>
