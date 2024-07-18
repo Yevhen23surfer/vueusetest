@@ -1,35 +1,29 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useTransition, TransitionPresets } from '@vueuse/core';
-const percent = ref(0);
-const disabled = ref(false);
-const color = ref('blue');
-const animatedPercent = useTransition(percent, {
-  transition: TransitionPresets.easeInCubic,
-  duration: 3000,
-  disabled,
-  onStarted() {},
-  onFinished() {
-    color.value = 'green';
-  },
+import { useRefHistory, useDebouncedRefHistory } from '@vueuse/core';
+const newTodo = ref('');
+const todos = ref([]);
+const { history, undo, redo } = useRefHistory(todos, {
+  deep: true,
+  capacity: 15,
 });
-const load = () => {
-  percent.value = 100;
-};
 </script>
 
 <template>
-  <div
-    class="loading"
-    :style="`width: ${animatedPercent}%; background: ${color};`"
-  ></div>
-  {{ Math.floor(animatedPercent) }}
-  <button @click="load">Load</button>
-  <button @click="disabled = true">Disable</button>
+  <input type="text" placeholder="New Todo" v-model="newTodo" />
+  <button
+    @click="
+      todos.unshift(newTodo);
+      newTodo = '';
+    "
+  >
+    Create Todo
+  </button>
+  <button @click="undo">Undo</button>
+  <button @click="redo">Redo</button>
+  <ul>
+    <li v-for="todo in todos" :key="todo">{{ todo }}</li>
+  </ul>
+  <br />
+  {{ history }}
 </template>
-
-<style>
-.loading {
-  height: 10px;
-}
-</style>
